@@ -1,24 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { css } from "@emotion/css";
+import { Button } from "@mui/material";
+
+import CurrencySelect from "./CurrenceSelect";
+import CurrencyRow from "./CurrencyRow";
+
+import "./App.css";
 
 function App() {
+  const [isButtonClicked, setIsButtonClicked] = useState(false);
+  const onClick = () => setIsButtonClicked(true);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div
+      className={css`
+        padding: 30px;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        background-color: hotpink;
+      `}
+    >
+      <h1>Converter</h1>
+      <CurrencyRow />
+      <Button variant="contained" onClick={onClick}>
+        Add currency
+      </Button>
+      {isButtonClicked && (
+        <CurrencySelect
+          isButtonClicked={isButtonClicked}
+          setIsButtonClicked={setIsButtonClicked}
+        />
+      )}
     </div>
   );
 }
