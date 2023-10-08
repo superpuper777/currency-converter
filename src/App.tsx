@@ -1,11 +1,11 @@
-import React, { useState } from "react";
-import { css } from "@emotion/css";
-import { Button } from "@mui/material";
+import React, { useState } from 'react';
+import { css } from '@emotion/css';
+import { Button } from '@mui/material';
 
-import CurrencySelect from "./CurrenceSelect";
-import CurrencyRow from "./CurrencyRow";
+import CurrencySelect from './CurrenceSelect';
+import CurrencyInput from './CurrencyInput';
 
-import "./App.css";
+import './App.css';
 
 function App() {
   const [isButtonClicked, setIsButtonClicked] = useState(false);
@@ -18,11 +18,10 @@ function App() {
         display: flex;
         align-items: center;
         flex-direction: column;
-        background-color: hotpink;
-      `}
-    >
+        background-color: #c3c2d4;
+      `}>
       <h1>Converter</h1>
-      <CurrencyRow />
+      <CurrencyInput />
       <Button variant="contained" onClick={onClick}>
         Add currency
       </Button>
