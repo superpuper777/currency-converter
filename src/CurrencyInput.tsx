@@ -1,24 +1,47 @@
-import { useEffect } from 'react';
+import { MouseEvent, MouseEventHandler, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-
-import { FormControl, InputLabel, OutlinedInput } from '@mui/material';
+import {
+  FormControl,
+  InputLabel,
+  OutlinedInput,
+  IconButton,
+} from '@mui/material';
+import { Delete } from '@mui/icons-material';
 import { css } from '@emotion/css';
 
 import { useAppDispatch } from './store/store';
-import { fetchCurrencies } from './store/currency/currencySlice';
-import { getCurrencies, getStatus } from './store/currency/currency.selectors';
+import {
+  fetchExchangeRates,
+  removeCurrency,
+} from './store/currency/currencySlice';
+import {
+  getExchangeRates,
+  getStatus,
+  getAdditionalCurrencies,
+} from './store/currency/currency.selectors';
 
 const CurrencyInput: React.FC = () => {
+  // const params = new URLSearchParams(search);
+
   const dispatch = useAppDispatch();
 
-  const currencies = useSelector(getCurrencies);
+  const currencies = useSelector(getExchangeRates);
+
+  console.log(currencies);
   const status = useSelector(getStatus);
-
+  const additionalCurrencies = useSelector(getAdditionalCurrencies);
   function handleValueChange(event: React.ChangeEvent<HTMLInputElement>) {}
+  // event: MouseEvent<HTMLButtonElement>;
+  const handleDelete = (event: MouseEvent<HTMLButtonElement>, code: string) => {
+    dispatch(removeCurrency(code));
+    console.log(event.target, code);
+    // queryParams.append('currencies', additionalCurrencies.join(','));
+  };
 
+  console.log(additionalCurrencies);
   useEffect(() => {
-    dispatch(fetchCurrencies());
-  }, [dispatch]);
+    dispatch(fetchExchangeRates(additionalCurrencies.join(',')));
+  }, [dispatch, additionalCurrencies]);
 
   return (
     <>
@@ -32,19 +55,34 @@ const CurrencyInput: React.FC = () => {
             align-items: center;
             flex-direction: column;
           `}>
-          {currencies?.currency?.map(({ value, code }) => (
-            <FormControl
-              key={code}
-              sx={{ m: 1, width: '25ch' }}
-              variant="outlined">
-              <InputLabel htmlFor="currency">{code}</InputLabel>
-              <OutlinedInput
-                id="currency"
-                label={code}
-                value={value}
-                onChange={handleValueChange}
-              />
-            </FormControl>
+          {currencies?.map(({ code, value }) => (
+            <div
+              className={css`
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: row;
+              `}>
+              <FormControl
+                key={code}
+                sx={{ m: 1, width: '25ch' }}
+                variant="outlined">
+                <InputLabel htmlFor="currency">{code}</InputLabel>
+                <OutlinedInput
+                  id="currency"
+                  label={code}
+                  value={value}
+                  onChange={handleValueChange}
+                />
+              </FormControl>
+              {additionalCurrencies.includes(code) && (
+                <IconButton
+                  aria-label="delete"
+                  onClick={(e) => handleDelete(e, code)}>
+                  <Delete />
+                </IconButton>
+              )}
+            </div>
           ))}
         </div>
       )}
