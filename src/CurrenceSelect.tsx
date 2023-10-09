@@ -1,26 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material';
 import { useAppDispatch } from './store/store';
-import { addCurrencies } from './store/currency/currencySlice';
-import { getAdditionalCurrencies } from './store/currency/currency.selectors';
-import { useLocation } from 'react-router-dom';
-
-const currencies = [
-  {
-    code: 'AED',
-    name: 'United Arab Emirates Dirham',
-  },
-  {
-    code: 'AFN',
-    name: 'Afghan Afghani',
-  },
-  {
-    code: 'ALL',
-    name: 'Albanian Lek',
-  },
-];
+import { addCurrencies } from './store/exchangeRate/exchangeRateSlice';
+import { getAdditionalCurrencies } from './store/exchangeRate/currency.selectors';
+import { getCurrencies } from './store/currency/currency.selectors';
+import { fetchCurrencies } from './store/currency/currencySlice';
 
 type CurrencySelectProps = {
   isButtonClicked: boolean;
@@ -31,21 +17,21 @@ const CurrencySelect: React.FC<CurrencySelectProps> = ({
   isButtonClicked,
   setIsButtonClicked,
 }: CurrencySelectProps) => {
-  const { search, pathname } = useLocation();
-  const queryParams = new URLSearchParams(search);
-
-  const additionalCurrencies = useSelector(getAdditionalCurrencies);
   const dispatch = useAppDispatch();
-  console.log(additionalCurrencies);
+
+  const currencies = useSelector(getCurrencies);
+  const additionalCurrencies = useSelector(getAdditionalCurrencies);
+
   const lastCurrency = additionalCurrencies[additionalCurrencies.length - 1];
 
   const handleChange = (event: SelectChangeEvent<string>) => {
     dispatch(addCurrencies(event.target.value));
-    console.log(typeof event.target.value);
-    queryParams.append('currencies', additionalCurrencies.join(','));
     // setIsButtonClicked(false);
-    console.log(queryParams);
   };
+
+  useEffect(() => {
+    dispatch(fetchCurrencies());
+  }, [dispatch]);
 
   return (
     <FormControl sx={{ m: 1, width: '25ch' }}>

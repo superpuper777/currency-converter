@@ -1,9 +1,11 @@
 import { combineReducers } from 'redux';
 
-import currencyReducer from './currency/currencySlice';
+import exchangeRateSlice from './exchangeRate/exchangeRateSlice';
+import currencySlice from './currency/currencySlice';
 
 const rootReducer = combineReducers({
-  currency: currencyReducer,
+  exchangeRate: exchangeRateSlice,
+  currency: currencySlice,
 });
 
 export default rootReducer;

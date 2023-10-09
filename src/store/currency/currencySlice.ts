@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { getCurrencies } from '../../api/currency';
-import { Currencies } from '../../api/currency/dto';
+
+import { AllCurrencies } from '../../api/currency/dto';
 
 export const fetchCurrencies = createAsyncThunk(
   'currency/fetchCurrencies',
@@ -11,12 +12,12 @@ export const fetchCurrencies = createAsyncThunk(
 );
 
 interface CurrenciesState {
-  currency: Currencies | null;
+  allcurrencies: AllCurrencies | null;
   status: 'idle' | 'pending' | 'succeeded' | 'failed';
 }
 
 const initialState: CurrenciesState = {
-  currency: null,
+  allcurrencies: null,
   status: 'idle',
 };
 
@@ -33,7 +34,7 @@ const currencySlice = createSlice({
     });
     builder.addCase(fetchCurrencies.fulfilled, (state, action) => {
       state.status = 'succeeded';
-      state.currency = action.payload;
+      state.allcurrencies = action.payload;
     });
   },
 });

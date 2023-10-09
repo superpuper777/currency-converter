@@ -1,4 +1,4 @@
-import { MouseEvent, MouseEventHandler, useEffect } from 'react';
+import { MouseEvent, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import {
   FormControl,
@@ -13,35 +13,46 @@ import { useAppDispatch } from './store/store';
 import {
   fetchExchangeRates,
   removeCurrency,
-} from './store/currency/currencySlice';
+  changeInput,
+  changeBaseCurrency,
+} from './store/exchangeRate/exchangeRateSlice';
 import {
   getExchangeRates,
   getStatus,
   getAdditionalCurrencies,
-} from './store/currency/currency.selectors';
+  getInpitValue,
+  getBaseCurrency,
+} from './store/exchangeRate/currency.selectors';
 
 const CurrencyInput: React.FC = () => {
-  // const params = new URLSearchParams(search);
-
   const dispatch = useAppDispatch();
 
+  const inputValue = useSelector(getInpitValue);
   const currencies = useSelector(getExchangeRates);
-
-  console.log(currencies);
   const status = useSelector(getStatus);
   const additionalCurrencies = useSelector(getAdditionalCurrencies);
-  function handleValueChange(event: React.ChangeEvent<HTMLInputElement>) {}
-  // event: MouseEvent<HTMLButtonElement>;
-  const handleDelete = (event: MouseEvent<HTMLButtonElement>, code: string) => {
-    dispatch(removeCurrency(code));
-    console.log(event.target, code);
-    // queryParams.append('currencies', additionalCurrencies.join(','));
+  const curriencesString = additionalCurrencies.join(',');
+  const baseCurrency = useSelector(getBaseCurrency);
+
+  // React.ChangeEvent<HTMLInputElement>;
+  const handleValueChange = (event: any, code: string) => {
+    dispatch(changeInput(event.target.value));
+    dispatch(changeBaseCurrency(code));
   };
 
-  console.log(additionalCurrencies);
+  const handleDelete = (event: MouseEvent<HTMLButtonElement>, code: string) => {
+    dispatch(removeCurrency(code));
+  };
+
   useEffect(() => {
-    dispatch(fetchExchangeRates(additionalCurrencies.join(',')));
-  }, [dispatch, additionalCurrencies]);
+    dispatch(
+      fetchExchangeRates({
+        currencies: curriencesString,
+        value: inputValue,
+        baseCurrency: baseCurrency,
+      })
+    );
+  }, [dispatch, curriencesString, inputValue, baseCurrency]);
 
   return (
     <>
@@ -57,6 +68,7 @@ const CurrencyInput: React.FC = () => {
           `}>
           {currencies?.map(({ code, value }) => (
             <div
+              key={code}
               className={css`
                 display: flex;
                 align-items: center;
@@ -71,8 +83,8 @@ const CurrencyInput: React.FC = () => {
                 <OutlinedInput
                   id="currency"
                   label={code}
-                  value={value}
-                  onChange={handleValueChange}
+                  defaultValue={value || ''}
+                  onChange={(e) => handleValueChange(e, code)}
                 />
               </FormControl>
               {additionalCurrencies.includes(code) && (
