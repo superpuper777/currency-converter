@@ -2,16 +2,20 @@ import React, { useState } from 'react';
 import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material';
 
-const currencies = {
-  currency: [
-    {
-      value: 1.2,
-      code: 'EUR',
-    },
-    { value: 3, code: 'BYN' },
-    { value: 1, code: 'USD' },
-  ],
-};
+const currencies = [
+  {
+    code: 'AED',
+    name: 'United Arab Emirates Dirham',
+  },
+  {
+    code: 'AFN',
+    name: 'Afghan Afghani',
+  },
+  {
+    code: 'ALL',
+    name: 'Albanian Lek',
+  },
+];
 
 type CurrencySelectProps = {
   isButtonClicked: boolean;
@@ -41,9 +45,9 @@ const CurrencySelect: React.FC<CurrencySelectProps> = ({
         onChange={handleChange}
         // open={isButtonClicked}
       >
-        {currencies.currency?.map(({ value, code }) => (
+        {currencies?.map(({ code, name }) => (
           <MenuItem key={code} value={code}>
-            {code}
+            {code} {name}
           </MenuItem>
         ))}
       </Select>
