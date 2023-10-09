@@ -20,6 +20,7 @@ const CurrencySelect: React.FC<CurrencySelectProps> = ({
   const dispatch = useAppDispatch();
 
   const currencies = useSelector(getCurrencies);
+
   const additionalCurrencies = useSelector(getAdditionalCurrencies);
 
   const lastCurrency = additionalCurrencies[additionalCurrencies.length - 1];

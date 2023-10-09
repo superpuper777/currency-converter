@@ -47,10 +47,8 @@ const exchangeRateSlice = createSlice({
       );
     },
     changeInput(state, action) {
-      state.value = action.payload;
-    },
-    changeBaseCurrency(state, action) {
-      state.baseCurrency = action.payload;
+      state.value = action.payload.value;
+      state.baseCurrency = action.payload.baseCurrency;
     },
   },
   extraReducers: (builder) => {
@@ -67,10 +65,6 @@ const exchangeRateSlice = createSlice({
   },
 });
 
-export const {
-  addCurrencies,
-  removeCurrency,
-  changeInput,
-  changeBaseCurrency,
-} = exchangeRateSlice.actions;
+export const { addCurrencies, removeCurrency, changeInput } =
+  exchangeRateSlice.actions;
 export default exchangeRateSlice.reducer;
